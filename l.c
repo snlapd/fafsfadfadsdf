@@ -51,7 +51,7 @@ struct USER singin();
 void showle();
 void forgot_password();
 void display();
-int find(char* ,char* , struct USER* ,int* );
+struct USER find(char* ,char* , struct USER* ,int* );
 int check_existing( struct USER , int*);
 void show();
 void admin_pannel();
@@ -79,13 +79,14 @@ void learned_words_(struct USER* );
 void add_word();
 void edit_word();
 struct ENGLISH_LETTERS* set_info(struct ENGLISH_LETTERS * head , char* , char* );
+int chlt(char*,char*);
 
 
 
 //-------------------------------------------------------
-int find(char* name,char* phone , struct USER* tmp  ,int* pos){
+struct USER find(char* name,char* phone , struct USER* tmp  ,int* pos){
 
-    struct USER user;
+    struct USER user , tmpp;
     FILE* fp;
     long p =0;
 	printf("      ");
@@ -97,384 +98,26 @@ int find(char* name,char* phone , struct USER* tmp  ,int* pos){
             if(!strcmp(name ,user.user_name) && !strcmp(phone , user.phone_number))
             {
                     *pos = p;
-					fclose(fp);
 					// *tmp = user;
-					 return 1;
+					tmpp = user;
+					fclose(fp);
+					
+					 return tmpp;
 					
             }
 
             p += sizeof(struct USER);
     }
 	printf("\n\nNOT %sFOUND%s THIS %sUSER%s \n\n" ,CRED,CWHITE,CMAG,CWHITE);
-	
-	return 0;
+	// strcpy(tmpp.user_name ,"tohi");
+	for(int i=0; i<100 ; i++) tmpp.user_name[i] = '\0';
+	return tmpp;
 
 					
 
 }
 
-// void readAndWriteWords() {
-//     FILE *inputFile = fopen("C:\\Users\\RSKALA\\Desktop\\Dictionary.txt", "r");
-//     if (inputFile == NULL) {
-//         perror("Failed to open input file");
-//         return;
-//     }
 
-//     FILE *outputFile = fopen("C:\\Users\\RSKALA\\Desktop\\dbletters.bin", "wb");
-//     if (outputFile == NULL) {
-//         perror("Failed to open output file");
-//         fclose(inputFile);
-//         return;
-//     }
-
-//     char line[2 * 50 + 2];
-//    struct ENGLISH_LETTERS word;
-
-//     while (fgets(line, sizeof(line), inputFile)) {
-//         // Skip the line number
-//         char *start = strchr(line, '-');
-//         if (start != NULL) {
-//             start += 1; // Move past the '-'
-//         } else {
-//             // If no '-' is found, skip this line (should not happen if the file format is correct)
-//             continue;
-//         }
-
-//         // Process the word and translation part
-//         char *delimiter = strchr(start, ':');
-//         if (delimiter != NULL) {
-//             *delimiter = '\0'; // Replace ':' with null terminator
-//             strncpy(word.letter, start, 50);
-//             word.letter[50 - 1] = '\0'; // Ensure null termination
-
-//             char *transformation = delimiter + 1;
-//             // Remove potential "transformation:" prefix and commas
-//             char *comma = strchr(transformation, ',');
-//             if (comma != NULL) {
-//                 *comma = '\0';
-//             }
-//             strncpy(word.dis, transformation, 50);
-//             word.dis[50- 1] = '\0'; // Ensure null termination
-
-//             // Remove newline character from Persian word if present
-//             size_t len = strlen(word.dis);
-//             if (word.dis[len - 1] == '\n') {
-//                 word.dis[len - 1] = '\0';
-//             }
-
-//             fwrite(&word, sizeof(struct ENGLISH_LETTERS), 1, outputFile);
-//         }
-//     }
-
-//     fclose(inputFile);
-//     fclose(outputFile);
-// // }
-// void readAndStoreWords() {
-//     // FILE *inputFile = fopen("", "r");
-//     FILE *inputFile = fopen("C:\\Users\\RSKALA\\Desktop\\Dictionary.txt", "r");
-
-//     if (inputFile == NULL) {
-//         perror("Failed to open input file");
-//         return;
-//     }
-
-//     char line[4 * 50 + 2];
-//     *wordCount = 0;
-
-//     while (fgets(line, sizeof(line), inputFile) && *wordCount < 100) {
-//         // Skip the line number
-//         char *start = strchr(line, '-');
-//         if (start != NULL) {
-//             start += 1; // Move past the '-'
-//         } else {
-//             // If no '-' is found, skip this line (should not happen if the file format is correct)
-//             continue;
-//         }
-
-//         // Find the position of "word:"
-//         char *wordStart = strstr(start, "word:");
-//         if (wordStart != NULL) {
-//             wordStart += 5; // Move past "word:"
-//         } else {
-//             continue; // If "word:" is not found, skip this line
-//         }
-
-//         // Find the position of "transformation:"
-//         char *transStart = strstr(start, "transformation:");
-//         if (transStart != NULL) {
-//             transStart += 14; // Move past "transformation:"
-//         } else {
-//             continue; // If "transformation:" is not found, skip this line
-//         }
-
-//         // Extract the English word
-//         char *endOfWord = strchr(wordStart, ',');
-//         if (endOfWord != NULL) {
-//             *endOfWord = '\0'; // Replace ',' with null terminator
-//         } else {
-//             continue; // If no ',' is found, skip this line (should not happen if the file format is correct)
-//         }
-
-//         strncpy(words[*wordCount].letter, wordStart, 50);
-//         words[*wordCount].letter[50 - 1] = '\0'; // Ensure null termination
-
-//         // Extract the Persian translation
-//         char *endOfTrans = strchr(transStart, ',');
-//         if (endOfTrans != NULL) {
-//             *endOfTrans = '\0'; // Replace ',' with null terminator
-//         } else {
-//             // Remove newline character if present
-//             size_t len = strlen(transStart);
-//             if (transStart[len - 1] == '\n') {
-//                 transStart[len - 1] = '\0';
-//             }
-//         }
-
-//         strncpy(words[*wordCount].dis, transStart, 50);
-//         words[*wordCount].dis[50- 1] = '\0'; // Ensure null termination
-
-//         (*wordCount)++;
-//     }
-
-
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
-
-// #define MAX_WORD_LENGTH 50
-
-// typedef struct {
-//     char english[MAX_WORD_LENGTH];
-//     char persian[MAX_WORD_LENGTH];
-// } Word;
-
-// void readAndWriteWords() {
-//     // FILE *inputFile = fopen(inputFileName, "r");
-//     FILE *inputFile = fopen("C:\\Users\\RSKALA\\Desktop\\Dictionary.txt", "r");
-
-//     if (inputFile == NULL) {
-//         perror("Failed to open input file");
-//         return;
-//     }
-
-//     // FILE *outputFile = fopen(outputFileName, "wb");
-//     FILE *outputFile = fopen("C:\\Users\\RSKALA\\Desktop\\dbletters.bin", "wb");
-
-//     if (outputFile == NULL) {
-//         perror("Failed to open output file");
-//         fclose(inputFile);
-//         return;
-//     }
-
-//     char line[4 * 50 + 2];
-//    struct ENGLISH_LETTERS word;
-
-//     while (fgets(line, sizeof(line), inputFile)) {
-//         // Skip the line number
-//         char *start = strchr(line, '-');
-//         if (start != NULL) {
-//             start += 1; // Move past the '-'
-//         } else {
-//             // If no '-' is found, skip this line (should not happen if the file format is correct)
-//             continue;
-//         }
-
-//         // Find the position of "word:"
-//         char *wordStart = strstr(start, "word:");
-//         if (wordStart != NULL) {
-//             wordStart += 5; // Move past "word:"
-//         } else {
-//             continue; // If "word:" is not found, skip this line
-//         }
-
-//         // Find the position of "transformation:"
-//         char *transStart = strstr(start, "transformation:");
-//         if (transStart != NULL) {
-//             transStart += 14; // Move past "transformation:"
-//         } else {
-//             continue; // If "transformation:" is not found, skip this line
-//         }
-
-//         // Extract the English word
-//         char *endOfWord = strchr(wordStart, ',');
-//         if (endOfWord != NULL) {
-//             *endOfWord = '\0'; // Replace ',' with null terminator
-//         } else {
-//             continue; // If no ',' is found, skip this line (should not happen if the file format is correct)
-//         }
-
-//         strncpy(word.letter, wordStart, 50);
-//         word.letter[50 - 1] = '\0'; // Ensure null termination
-
-//         // Extract the Persian translations
-//         // Assuming multiple translations are separated by commas
-//         char *token = strtok(transStart, ",");
-//         if (token != NULL) {
-//             strncpy(word.dis, token, 50);
-//             word.dis[50 - 1] = '\0'; // Ensure null termination
-//         } else {
-//             // If no translation is found, skip this line
-//             continue;
-//         }
-
-//         // Write the word to the binary file
-//         fwrite(&word, sizeof(struct ENGLISH_LETTERS), 1, outputFile);
-//     }
-
-//     fclose(inputFile);
-//     fclose(outputFile);
-// 	showle();
-// 	Sleep(20000);
-// }
-
-// int main() {
-//     readAndWriteWords("words.txt", "words.bin");
-//     return 0;
-// }
-
-
-
-
-// void readAndWriteWords() {
-//     // FILE *inputFile = fopen(inputFileName, "r");
-//     FILE *inputFile = fopen("C:\\Users\\RSKALA\\Desktop\\Dictionary.txt", "r");
-
-//     if (inputFile == NULL) {
-//         perror("Failed to open input file");
-//         return;
-//     }
-
-//     // FILE *outputFile = fopen(outputFileName, "wb");
-//     FILE *outputFile = fopen("C:\\Users\\RSKALA\\Desktop\\dbletters.bin", "wb");
-
-//     if (outputFile == NULL) {
-//         perror("Failed to open output file");
-//         fclose(inputFile);
-//         return;
-//     }
-
-//     char line[2 * 50 + 2];
-//     struct ENGLISH_LETTERS  word;
-
-//     while (fgets(line, sizeof(line), inputFile)) {
-//         // Skip the line number
-//         char *start = strchr(line, '-');
-//         if (start != NULL) {
-//             start += 1; // Move past the '-'
-//         } else {
-//             // If no '-' is found, skip this line (should not happen if the file format is correct)
-//             continue;
-//         }
-
-//         // Process the word and translation part
-//         char *delimiter = strchr(start, ':');
-//         if (delimiter != NULL) {
-//             *delimiter = '\0'; // Replace ':' with null terminator
-//             strncpy(word.letter, start, 50);
-//             word.letter[50 - 1] = '\0'; // Ensure null termination
-
-//             char *transformation = delimiter + 1;
-//             // Remove potential "transformation:" prefix and commas
-//             char *comma = strchr(transformation, ',');
-//             if (comma != NULL) {
-//                 *comma = '\0';
-//             }
-//             strncpy(word.dis, transformation, 50);
-//             word.dis[50 - 1] = '\0'; // Ensure null termination
-
-//             // Remove newline character from Persian word if present
-//             size_t len = strlen(word.dis);
-//             if (word.dis[len - 1] == '\n') {
-//                 word.dis[len - 1] = '\0';
-//             }
-
-//             fwrite(&word, sizeof(struct ENGLISH_LETTERS), 1, outputFile);
-//         }
-//     }
-
-//     fclose(inputFile);
-//     fclose(outputFile);
-// }
-
-
-
-
-
-// void readAndWriteWords() {
-//     // FILE *inputFile = fopen("words.txt", "r");
-//     FILE *inputFile = fopen("C:\\Users\\RSKALA\\Desktop\\Dictionary.txt", "r");
-
-//     if (inputFile == NULL) {
-//         perror("Failed to open input file");
-//         return;
-//     }
-
-//     // FILE *outputFile = fopen("words.bin", "wb");
-//     FILE *outputFile = fopen("C:\\Users\\RSKALA\\Desktop\\dbletters.bin", "wb");
-    
-//     if (outputFile == NULL) {
-//         perror("Failed to open output file");
-//         fclose(inputFile);
-//         return;
-//     }
-
-//     char line[4 *50+ 2];
-//     struct ENGLISH_LETTERS word;
-
-//     while (fgets(line, sizeof(line), inputFile)) {
-//         // Skip the line number
-//         char *start = strchr(line, '-');
-//         if (start != NULL) {
-//             start += 1; // Move past the '-'
-//         } else {
-//             continue; // If no '-' is found, skip this line
-//         }
-
-//         // Find the position of "word:"
-//         char *wordStart = strstr(start, "word:");
-//         if (wordStart != NULL) {
-//             wordStart += 5; // Move past "word:"
-//         } else {
-//             continue; // If "word:" is not found, skip this line
-//         }
-
-//         // Find the position of "transformation:"
-//         char *transStart = strstr(start, "transformation:");
-//         if (transStart != NULL) {
-//             transStart += 14; // Move past "transformation:"
-//         } else {
-//             continue; // If "transformation:" is not found, skip this line
-//         }
-
-//         // Extract the English word
-//         char *endOfWord = strchr(wordStart, ',');
-//         if (endOfWord != NULL) {
-//             *endOfWord = '\0'; // Replace ',' with null terminator
-//         } else {
-//             continue; // If no ',' is found, skip this line
-//         }
-
-//         strncpy(word.letter, wordStart, 50);
-//         word.letter[50 - 1] = '\0'; // Ensure null termination
-
-//         // Extract the Persian translations
-//         char *endOfTrans = strchr(transStart, '\n');
-//         if (endOfTrans != NULL) {
-//             *endOfTrans = '\0'; // Replace newline with null terminator
-//         }
-
-//         // Join all translations with comma
-//         // In this case, we assume all translations are in a single line and separated by commas
-//         snprintf(word.dis, sizeof(word.dis), "%s", transStart);
-
-//         // Write the word to the binary file
-//         fwrite(&word, sizeof(struct ENGLISH_LETTERS), 1, outputFile);
-//     }
-
-//     fclose(inputFile);
-//     fclose(outputFile);'
-
-// }
 void write_binary_file(struct ENGLISH_LETTERS *entries, int count) {
 	int i=0;
     // FILE *file = fopen(filename, "wb");
@@ -485,17 +128,8 @@ void write_binary_file(struct ENGLISH_LETTERS *entries, int count) {
     FILE *fp = fopen("C:\\Users\\RSKALA\\Desktop\\dbletters.bin", "w+b");
 
 
-    // if (!file) {
-    //     perror("Failed to open file for writing");
-    //     exit(EXIT_FAILURE);
-
-    // }
-	// while(entries[i].letter){
+ 
     fwrite(entries, sizeof(struct ENGLISH_LETTERS), count, fp);
-    // fclose(fp);
-	// entries++;
-	// i++;
-
 	}
 	fclose(fp);
 	showle();
@@ -503,9 +137,6 @@ void write_binary_file(struct ENGLISH_LETTERS *entries, int count) {
 	printf("-------------\n");
 	admin_pannel();
 }
-
-
-
 
 
 void r()
@@ -548,11 +179,10 @@ void r()
 
     write_binary_file(entries, count);
     // FILE *outputFile = fopen("C:\\Users\\RSKALA\\Desktop\\dbletters.bin", "wb");
-	
+	admin_pannel();
 
     // printf("Dictionary written to dictionary.bin with %d entries.\n", count);
-    return ;
-
+  
 
 
 	
@@ -629,25 +259,6 @@ while(user->linter_.new_words[e][0]) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 int find_field(char * word , char n)
 {
     struct USER user;
@@ -712,18 +323,20 @@ int find_field(char * word , char n)
 
 void show_lin(struct ENGLISH_LETTERS* head){
 	struct ENGLISH_LETTERS* ptmp = head;
-	// sort(&head);
+	sort(&head);
 
 	while(ptmp){
 			printf("\nword : %s\t\t d:%s\n\n" , ptmp->letter , ptmp->dis);
 			ptmp = ptmp->next;
 	}
-	printf("\n\n~ bacck->press %s b %s" , CRED,CWHITE);
 // while(1){
 // 	char key = _getch();
 // 	if(key == 'b') admin_pannel();
 // 	else printf("enter the correct value!");
 //    }
+Sleep(5000);
+admin_pannel();
+
 }
 
 
@@ -766,138 +379,64 @@ int fnletter(char* letter_){
 int main()
 {
 
-// r();
-// showle();
-// Sleep(120000);
+
+
+
+
 
 	int t = 0, i = 0;
 	int key;
 
-	// char message[50] = "WELCOME TO SPARATA DICTIONARY ;)";
-	// int ret = GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-	// 	int width = csbi.dwSize.X;
+	char message[50] = "WELCOME TO SPARATA DICTIONARY ;)";
+	int ret = GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+		int width = csbi.dwSize.X;
 
-	// 	 for (int i = 0; i < width; i=i+3) {
-	// 	 printf("%s - " ,colors[t++]);
-	// 	 if (t > 4) t = 0;
-	//  }
-	//   loop_space(width / 3 + 4);
-	//  while (message[i]) {
-	// 	 printf("%c", message[i]);
-	// 		 Sleep(120);
+		 for (int i = 0; i < width; i=i+3) {
+		 printf("%s - " ,colors[t++]);
+		 if (t > 4) t = 0;
+	 }
+	  loop_space(width / 3 + 4);
+	 while (message[i]) {
+		 printf("%c", message[i]);
+			 Sleep(120);
 
-	// 	 i++;
+		 i++;
 
-	//  }
-
-
+	 }
 
 
-// r();
-// printf("this is test");
-	// r();
+
+
+
 	menue(&key);
 
 
-
-// if(key ==1)singin();
-	// printf("out");
-    // readAndWriteWords();
-	// printf("out\n");
-	// showle();
-	// printf("out");
-
-
-
-// showle();
-// Sleep(40000);
-    // singup();
-	
-	// show();
-	// Sleep(2000);
-    //  hndl();
-	//  readAndWriteWords();
-	//  showle();
-	//  Sleep(20000);
-	// printf("this is test");
-	// struct USER user;
-	// // linter(&user);
-
-	// // show();
-
-	// user = singin();
-	// // admin_pannel();
-	// user_pannel(&user);
-	// linter(&user);
-
-	// admin_pannel();
-	// // Sleep(4000);
-
-
-    // user = singin();
-	// linter(&user);
-	// user_pannel(&user);
-	// linter(&user);
-    // edit_information(&user);
-
-    //  Search_letter(&user);
-
-	// char key;
-	// int emtity;
-	// show();
-	
-	// // linter(&user);
-	// admin_pannel();
-	
-      
-    // int position =0;
-	// admin_pannel();
-	// show();
-    // find("name-khatar" , "0914123" ,&position );
-	// forgot_password();
-
-	// menue(&key);
-
-
-
-
-	
-	// printf("%c", key);
-		/*while (1) {*/
-
-			// switch (key)
-			// {
-			// case '1':
-			// 	singup();
-			// 	break;
-			// case'2':
-			//    user= singin();
-			//    if(!strcmp(user.user_name , "Admin")) admin_pannel();
-			//    else    user_pannel(&user);
-			// 	break;
-			// case '3':
-			// 		forgot_password();
-			// 		break;
-			
-			// case '4':
-			// 	exit(0);
-			// default:
-
-			// printf("ENTER THE CORRECT VALUE! \n\n");
-			// Sleep(1200);
-			// system("cls");
-			// 	break;
-
-			// }
-
-
-		//}
 
 
 
 	return 0;
 }
 
+
+int chlt(char* one,char*two)
+{
+	int i=0;
+
+while(one[i] && two[i]){
+
+				if(one[i]>=two[i]) return 1;
+				else return 0;
+
+
+		i++;
+
+		
+
+
+}
+
+
+}
 
 
 
@@ -958,6 +497,8 @@ void menue()
 	 
 	 loop_space(width / 4 + 1);
 	 printf("\b|   ");
+	  loop_space((width / 31));
+	   loop_space((width / 31));
 	 //printf("1-Sing up 2-Sing in 3-Forgot password 4-Exit");*/
 	 t = 0;
 	 do {
@@ -966,11 +507,11 @@ void menue()
 		 t++;
 
 	 } while (t<4);
-	 
+	  loop_space(width / 14+3);
 	
 	 printf("|\n");
-	 loop_space(width / 4);
-
+	
+ loop_space(width / 4);
 	  printf("|");
 	 for (int i = 0; i < (width / 2) + width / 2; i = i + 2) {
 		 printf(" ");
@@ -1046,49 +587,9 @@ void menue()
 			}
 
 
-		//}
-
-
-
-	//  printf("%s\n\n\n\n", colors[4]);
-
-	// //  while(1){
-	// 		switch (key)
-	// 		{
-	// 		case 1:
-	// 			singup();
-	// 			break;
-	// 		case 2:
-	// 		   user= singin();
-	// 		   if(!strcmp(user.user_name , "Admin")) admin_pannel();
-	// 		   else    user_pannel(&user);
-	// 			break;
-	// 		case 3:
-	// 				forgot_password();
-	// 				break;
-			
-	// 		case 4:
-	// 			exit(0);
-	// 		default:
-
-	// 		printf("ENTER THE CORRECT VALUE! \n\n");
-	// 		Sleep(1200);
-	// 		system("cls");
-	// 			break;
-
-	// 		}
-			// menue();
-			// printf("what");
-			// key = _getch();
 
 	 }
 
-
-
-
-
-
-// }
 
 
 
@@ -1253,13 +754,14 @@ while(1){
 
 		char passw[100];
 		fclose(fp);
-      if(find( user.user_name, user.phone_number , &tmp ,&position )){
+		struct USER help = find( user.user_name, user.phone_number , &tmp ,&position );
+         if(tmp.user_name){
 		
 		// while(fread(checke.user_name , sizeof(struct USER) , 1, fp)){
 		// 		if(!strcmp(checke.user_name,user.user_name)){
 
 
-							 printf("ENTER NEW PASSWORD : ");
+							 printf("\n\nENTER NEW PASSWORD : ");
 		                      scanf("%s" ,tmp.pass);
 			// strcpy(tmp.pass , "123412341234");
 			
@@ -1381,7 +883,7 @@ void show()
 void admin_pannel(){
 
 	// COORD t;
-	
+	system("cls");
  struct ENGLISH_LETTERS* head = NULL;
    struct ENGLISH_LETTERS* tmp = make_linked_word();
 
@@ -1441,7 +943,6 @@ case '1':
 
 	case '4':
      	r();
-	printf(" ");
 	break;
 
 	case '5':
@@ -1449,12 +950,12 @@ case '1':
 	break;
 
 	case '6':
-		
 	   show_lin(head);
 		break;
 
 	case '7':
 			menue();
+			break;
 	
 	
 	default:
@@ -1720,11 +1221,17 @@ struct ENGLISH_LETTERS* make_linked_word()
 void remove_word_l(struct ENGLISH_LETTERS** head)
 {
 
+system("cls");
 
 	struct ENGLISH_LETTERS* temp = *head;
 	struct ENGLISH_LETTERS* pr =NULL;
 
-char word[2]= "m";
+    char word[100];
+
+    printf("ENTER THE WORD : ");
+    scanf("%s" , word);
+
+// char word[2]= "m";
 	if(temp!= NULL && !strcmp(temp->letter ,word))
 	{
 			*head = temp->next;
@@ -1743,7 +1250,7 @@ char word[2]= "m";
 
 	if(!temp) return ;	
 
-	pr->next = temp->next;
+	// pr->next = temp->next;
 
 	free(temp);
 
@@ -1762,7 +1269,7 @@ void sort(struct ENGLISH_LETTERS** head){
 		for(i = *head; i->next ; i = i->next){
 
 				for(j=i->next ; j ; j = j->next){
-						if(strcpy(i->letter , j->letter)){
+						if(chlt(i->letter , j->letter)){
 								strcpy(temp_letter , i->letter);
 								strcpy(temp_d , i->dis);
 								
@@ -1984,6 +1491,8 @@ void Search_letter(struct USER* user){
 void linter(struct USER* user )
 {
 
+
+    system("cls");
     struct ENGLISH_LETTERS* ptmp = make_linked_word();
 
 	struct ENGLISH_LETTERS* head = NULL;
@@ -2003,7 +1512,13 @@ void linter(struct USER* user )
 	case '2':
 		review(head , user);
 		break;
-   
+        case '3':
+     
+        conslidation(head,user);
+        break;
+        case '4':
+            learned_words_(user);
+	
 	default:
 		break;
 	}
@@ -2049,12 +1564,12 @@ void edit_information(struct USER* user)
      switch (op)
      {
      case '1':
-     printf("ENTER NEW NAME : ");
+     printf("\n\nENTER NEW NAME : ");
      scanf("%s" , user->first_name);
        
        break;
        case '2':
-       printf("ENTER NEW LAST-NAME : ");
+       printf("\n\nENTER NEW LAST-NAME : ");
         scanf("%s" , user->last_name);
         break;
 
@@ -2255,18 +1770,21 @@ while(user->linter_.new_words[e][0]) {
 
 	int i=0 ,t=0,r=0;
 	char key;
-	while(user->linter_.new_words[i][0]){
+	while(user->linter_.conslidation[i][0]){
 	// while(user->linter_.new_words[i])
 	// {
+		// t=0;
 
-			// key = _getch();
-		//    if(key == '\r') {
+		
 
 	     system("cls");
 		// while(user->linter_.new_words[i][0] ){
 			// t=0;
-		 	printf("%s       " , user->linter_.new_words[i]); 
-			key = _getch();
+		 	printf("%s       " , user->linter_.conslidation[i]); 
+				key = _getch();
+		   if(key == '\r') {i++;  continue;}
+			//   if(key == '\r') {i++; t++ ; continue;}
+			// key = _getch();
 			//  if(key =='\r') { i++; t++ ;continue;}
 		
 			 if(key == ' '){
@@ -2275,42 +1793,44 @@ while(user->linter_.new_words[e][0]) {
 				       
 						ptmp = head;
 						while(ptmp){
-						if(!strcmp(ptmp->letter , user->linter_.conslidation[t])){
-								printf("%s            " , ptmp->dis);
+						if(!strcmp(ptmp->letter , user->linter_.conslidation[i])){
+								printf("mean : %s  word : %s \n\n          " , ptmp->dis , ptmp->letter);
 								break;
 							
 
 						}
-						int t=0;
+						// int t=0;
 						ptmp = ptmp->next;
 					    // if(!ptmp){	if(user->linter_.new_words[t][0]) ptmp=head;   }
 						 
 						
 
 
-						}	t++;
+						}	
 
 		while(1){
-			for(r ; user->linter_.review[r][0] ; r++);
+			
+			for(r ; user->linter_.learn_words[r][0] ; r++);
 			printf("\n\n1.learned\n\n 2.Did not learn\n\n ~ ~ ENTER HERE -> ");
 			ans = _getch();
 			if(ans=='2')  {  break;}
-			if(ans == '1') {strcpy(user->linter_.learn_words[r] , user->linter_.new_words[i]); break;}
+			if(ans == '1') {strcpy(user->linter_.learn_words[r] , user->linter_.conslidation[i]); r=0; break;}
 			else{ printf("\n\nenter the correct value"); Sleep(2000); system("cls"); continue;   }
 			
 
 
 		}
 
-		// 	key = _getch();
-		// //    if(key == ' ')   { t--; continue;}
-        // //5-----------------------------------
-		    // if(key =='\r') { i++ ;--t; continue;} 
+			key = _getch();
+		   if(key == ' ')   {  continue;}
+       
+		    if(key =='\r') { i++ ; continue;} 
 
 
 
 
 			}
+	}
 
 
 
@@ -2333,7 +1853,7 @@ while(user->linter_.new_words[e][0]) {
 
 	
 }
-}
+
 
 
 			
